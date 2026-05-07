@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Dinâmica - API REST</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Poppins', sans-serif;
+            background:
+                linear-gradient(135deg,#0f172a,#1e293b);
+            min-height:100vh;
+            padding:40px;
+            color:white;
+        }
+
+        .container{
+            max-width:1300px;
+            margin:auto;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+            flex-wrap:wrap;
+            gap:20px;
+        }
+
+        .title-area h1{
+            font-size:2.5rem;
+            margin-bottom:10px;
+        }
+
+        .title-area p{
+            color:#cbd5e1;
+        }
+
+        .badge{
+            display:inline-block;
+            background:#2563eb;
+            color:white;
+            padding:6px 14px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:600;
+            margin-bottom:15px;
+        }
+
+        .actions{
+            display:flex;
+            gap:15px;
+        }
+
+        .btn{
+            text-decoration:none;
+            padding:14px 22px;
+            border-radius:14px;
+            font-weight:600;
+            transition:0.3s;
+            border:none;
+            cursor:pointer;
+        }
+
+        .btn-primary{
+            background:#3b82f6;
+            color:white;
+        }
+
+        .btn-primary:hover{
+            background:#2563eb;
+        }
+
+        .btn-secondary{
+            background:rgba(255,255,255,0.1);
+            color:white;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-secondary:hover{
+            background:rgba(255,255,255,0.18);
+        }
+
+        .table-container{
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:20px;
+            overflow:hidden;
+            backdrop-filter: blur(12px);
+            box-shadow:0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        thead{
+            background:rgba(59,130,246,0.2);
+        }
+
+        thead th{
+            padding:18px;
+            text-align:left;
+            color:#93c5fd;
+            font-weight:600;
+            border-bottom:1px solid rgba(255,255,255,0.1);
+        }
+
+        tbody tr{
+            transition:0.3s;
+        }
+
+        tbody tr:hover{
+            background:rgba(255,255,255,0.05);
+        }
+
+        tbody td{
+            padding:16px 18px;
+            border-bottom:1px solid rgba(255,255,255,0.05);
+            color:#f1f5f9;
+        }
+
+        .loading,
+        .error,
+        .empty{
+            padding:40px;
+            text-align:center;
+            color:#cbd5e1;
+            font-size:1.1rem;
+        }
+
+        .error{
+            color:#fca5a5;
+        }
+
+        @media(max-width:768px){
+
+            body{
+                padding:20px;
+            }
+
+            .header{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .title-area h1{
+                font-size:2rem;
+            }
+
+            .table-container{
+                overflow:auto;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="title-area">
+
+            <div class="badge">Spring Boot • API REST</div>
+
+            <h1>Lista Dinâmica</h1>
+
+            <p>
+                Dados carregados automaticamente do endpoint REST.
+            </p>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="btn btn-primary" onclick="carregarDados()">
+                Atualizar Dados
+            </button>
+
+            <a href="/" class="btn btn-secondary">
+                Voltar ao Início
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="table-container">
+
+        <div id="loading" class="loading">
+            Carregando dados da API...
+        </div>
+
+        <div id="error" class="error" style="display:none;">
+            Erro ao carregar os dados da API.
+        </div>
+
+        <div id="empty" class="empty" style="display:none;">
+            Nenhum registro encontrado.
+        </div>
+
+        <table id="table" style="display:none;">
+
+            <thead>
+                <tr id="tableHead"></tr>
+            </thead>
+
+            <tbody id="tableBody"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+    /*
+        URL DO ENDPOINT
+    */
+
+    const params = new URLSearchParams(window.location.search);
+
+    const API_URL = params.get("api");
+
+    async function carregarDados(){
+
+        const loading = document.getElementById("loading");
+        const error = document.getElementById("error");
+        const empty = document.getElementById("empty");
+        const table = document.getElementById("table");
+
+        loading.style.display = "block";
+        error.style.display = "none";
+        empty.style.display = "none";
+        table.style.display = "none";
+
+        try{
+
+            /*
+                Chama o controller REST
+            */
+
+            const response = await fetch(API_URL);
+
+            if(!response.ok){
+                throw new Error("Erro ao consultar API");
+            }
+
+            /*
+                Converte JSON
+            */
+
+            const dados = await response.json();
+
+            /*
+                Renderiza tabela
+            */
+
+            renderizarTabela(dados);
+
+        }
+        catch(e){
+
+            console.error(e);
+
+            loading.style.display = "none";
+            error.style.display = "block";
+
+        }
+
+    }
+
+    function renderizarTabela(lista){
+
+        const tableHead = document.getElementById("tableHead");
+        const tableBody = document.getElementById("tableBody");
+
+        const loading = document.getElementById("loading");
+        const empty = document.getElementById("empty");
+        const table = document.getElementById("table");
+
+        tableHead.innerHTML = "";
+        tableBody.innerHTML = "";
+
+        loading.style.display = "none";
+
+        if(!lista || lista.length === 0){
+
+            empty.style.display = "block";
+            return;
+
+        }
+
+        /*
+            Obtém colunas dinamicamente
+        */
+
+        const colunas = Object.keys(lista[0]);
+
+        /*
+            Cria cabeçalho
+        */
+
+        colunas.forEach(coluna => {
+
+            const th = document.createElement("th");
+
+            th.textContent =
+                coluna.charAt(0).toUpperCase() + coluna.slice(1);
+
+            tableHead.appendChild(th);
+
+        });
+
+        /*
+            Cria linhas
+        */
+
+        lista.forEach(item => {
+
+            const tr = document.createElement("tr");
+
+            colunas.forEach(coluna => {
+
+                const td = document.createElement("td");
+
+                /*
+                    Trata valores null
+                */
+
+                td.textContent =
+                    item[coluna] !== null
+                        ? item[coluna]
+                        : "-";
+
+                tr.appendChild(td);
+
+            });
+
+            tableBody.appendChild(tr);
+
+        });
+
+        table.style.display = "table";
+
+    }
+
+    /*
+        Carrega automaticamente
+        ao abrir a página
+    */
+
+    carregarDados();
+
+</script>
+
+</body>
+</html>

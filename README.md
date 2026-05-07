@@ -104,6 +104,205 @@ Neste projeto serão utilizados:
 
 ---
 
+# Preparando o Ambiente de Desenvolvimento
+
+## Instalando o Visual Studio Code
+
+O Visual Studio Code é um editor leve e muito utilizado no desenvolvimento Java moderno.
+
+### Download
+
+Instale o VS Code:
+
+* Linux
+* Windows
+* macOS
+
+---
+
+# Extensões Recomendadas para Spring Boot
+
+Abrir:
+
+```text
+VS Code → Extensions
+```
+
+Instalar:
+
+| Extensão                   | Finalidade               |
+| -------------------------- | ------------------------ |
+| Extension Pack for Java    | Suporte completo ao Java |
+| Spring Boot Extension Pack | Ferramentas Spring Boot  |
+| Docker                     | Integração com Docker    |
+| SQL Server (mssql)         | Acesso ao SQL Server     |
+| Thunder Client             | Testes de API REST       |
+
+---
+
+# O que é o Thunder Client?
+
+O Thunder Client é uma extensão do VS Code semelhante ao:
+
+* Postman
+* Insomnia
+
+Permite:
+
+* enviar requisições HTTP
+* testar APIs REST
+* salvar coleções
+* testar endpoints JSON
+
+---
+
+# Instalando o SQL Server Extension
+
+A extensão oficial da Microsoft para SQL Server permite:
+
+* conectar ao banco
+* executar comandos SQL
+* visualizar tabelas
+* criar consultas
+* administrar o banco
+
+### Como instalar
+
+1. Abrir Extensions
+2. Procurar:
+
+```text
+SQL Server (mssql)
+```
+
+3. Instalar a extensão oficial da Microsoft
+
+---
+
+# Conectando ao SQL Server pelo VS Code
+
+Após iniciar o container do SQL Server:
+
+```bash
+docker compose up -d
+```
+
+Abrir:
+
+```text
+Ctrl + Shift + P
+```
+
+Executar:
+
+```text
+MS SQL: Connect
+```
+
+Informar:
+
+| Campo    | Valor          |
+| -------- | -------------- |
+| Server   | localhost      |
+| Porta    | 1433           |
+| Usuário  | sa             |
+| Senha    | SenhaForte123! |
+| Database | curso_db       |
+
+---
+
+# Criando um Projeto Spring Boot no VS Code
+
+## Método 1 — Spring Initializr
+
+Abrir:
+
+```text
+Ctrl + Shift + P
+```
+
+Executar:
+
+```text
+Spring Boot
+Maven Project
+Versão 4.0.6
+Java
+Package (br.edu.ifsuldeminas)
+app
+War
+Java version 21 ou equivalente
+Em dependências, clicar Enter
+Escolher a pasta de destino
+```
+
+---
+
+## Configurações do Projeto
+
+### Linguagem
+
+```text
+Java
+```
+
+### Versão do Spring Boot
+
+Selecionar a versão estável mais recente.
+
+---
+
+## Informações do Projeto
+
+| Campo        | Exemplo            |
+| ------------ | ------------------ |
+| Group        | br.com.exemplo     |
+| Artifact     | projeto-springboot |
+| Name         | projeto-springboot |
+| Package      | br.com.exemplo     |
+| Packaging    | War                |
+| Java Version | 21                 |
+
+---
+
+# Estrutura Inicial Gerada
+
+```text
+src/
+├── main/
+│   ├── java/
+│   └── resources/
+└── test/
+```
+
+---
+
+# Executando o Projeto pela Primeira Vez
+
+## Pela IDE
+
+Abrir a classe:
+
+```text
+ProjetoApplication.java ou AppApplication.java
+```
+
+Executar:
+
+```text
+Run Java
+```
+
+---
+
+## Pelo Terminal
+
+```bash
+./mvnw spring-boot:run
+```
+
+---
+
 # Configuração do Projeto Spring Boot
 
 ## Dependências Maven

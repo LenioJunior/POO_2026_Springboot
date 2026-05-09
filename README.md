@@ -361,7 +361,7 @@ Exemplo de dependências principais:
 ## application.properties
 
 ```properties
-spring.datasource.url=jdbc:sqlserver://sqlserver:1433;databaseName=curso_db;encrypt=false;trustServerCertificate=true
+spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=curso_db;encrypt=false;trustServerCertificate=true
 spring.datasource.username=sa
 spring.datasource.password=Sql1234@%
 

@@ -507,8 +507,6 @@ WORKDIR /app
 ## docker-compose.yml
 
 ```yaml
-version: '3.9'
-
 services:
 
   sqlserver:

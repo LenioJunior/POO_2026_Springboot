@@ -40,7 +40,41 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.create(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        user = userService.create(user);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestParam Long id, @RequestParam String name, @RequestParam int age) {
+
+        User userToUpdate = new User(id, name, age);
+        try {
+            User user = userService.update(userToUpdate);
+            return ResponseEntity.ok(user);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            User user = userService.delete(id);
+            response.put("entity", user);
+            response.put("message", "The user was delete sucessfuly.");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            response.put("message", "An error ocurred while deleting the user: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 }

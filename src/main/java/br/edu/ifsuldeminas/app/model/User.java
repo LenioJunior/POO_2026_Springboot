@@ -15,14 +15,15 @@ public class User {
     private Long id;
 
     private String name;
-    private int idade;
+    private int age;
 
     public User() {
     }
 
-    public User(Long id, String name) {
+    public User(Long id, String name, int age) {
         this.id = id;
         this.name = name;
+        this.age = age;
     }
 
     public Long getId() {
@@ -41,11 +42,11 @@ public class User {
         this.name = name;
     }
 
-    public int getIdade() {
-        return idade;
+    public int getAge() {
+        return age;
     }
 
-    public void setIdade(int idade) {
-        this.idade = idade;
+    public void setAge(int idade) {
+        this.age = idade;
     }
 }
